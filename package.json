@@ -1,0 +1,43 @@
+{
+  "name": "patchbay",
+  "version": "0.1.0",
+  "author": "Evan Krambuhl <thekrambuhl@gmail.com>",
+  "keywords": [
+    "View",
+    "Model",
+    "Collection",
+    "Router"
+  ],
+  "main": "dist/patchbay.js",
+  "scripts": {
+    "develop": "gulp develop",
+    "compile": "gulp compile",
+    "test": "gulp test",
+    "ci-test": "./node_modules/karma/bin/karma start --single-run true && npm run ci-climate",
+    "ci-climate": "mv coverage/*/lcov.info coverage && codeclimate < coverage/lcov.info"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:krambuhl/Patchbay.git"
+  },
+  "devDependencies": {
+    "codeclimate-test-reporter": "0.0.3",
+    "groc": "^0.6.3",
+    "gulp": "^3.8.6",
+    "gulp-concat": "^2.3.4",
+    "gulp-docco": "0.0.4",
+    "gulp-mocha-phantomjs": "^0.3.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-sourcemaps": "^1.1.0",
+    "gulp-uglify": "^0.3.1",
+    "karma": "^0.12.23",
+    "karma-coverage": "^0.2.6",
+    "karma-mocha": "^0.1.9",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "mocha": "^1.21.4"
+  },
+  "dependencies": {
+    "jquery": "~2",
+    "lodash": "~2"
+  }
+}
