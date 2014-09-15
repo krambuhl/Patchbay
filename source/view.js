@@ -28,7 +28,7 @@ Patchbay.View = (function() {
 
     _.defer(function() {
       // cache jquery elements
-      setupUI(self, result(self.ui));
+      self.setUI(self, result(self.ui));
 
       // run setup function
       self.setup(self.options);
@@ -37,6 +37,7 @@ Patchbay.View = (function() {
 
   View.prototype.setModel = function(model, data) {
     data = firstDef(data, {});
+    
     if (model) {
       if (model instanceof Patchbay.Model) {
         this.model = model;
@@ -60,6 +61,14 @@ Patchbay.View = (function() {
         return this.$el.find(el);
       };
     }
+  };
+
+  View.prototype.setUI = function(ui) {
+    // cache dom objects from UI object
+    this.ui = _.reduce(ui, function(result, selector, name) {
+      result[name] = this.$(selector);
+      return result;
+    }, {}, this);
   };
 
   // `render` function that runs
@@ -92,14 +101,6 @@ Patchbay.View = (function() {
   };
 
   // ###Private Functions
-
-  // cache dom objects from UI object
-  function setupUI(view, ui) {
-    view.ui = _.reduce(ui, function(result, selector, name) {
-      result[name] = view.$(ui[name]);
-      return result;
-    }, {});
-  }
 
   return View;
 });
