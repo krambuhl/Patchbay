@@ -14,7 +14,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'test/vendor/*.js',
-      'dist/struck.js',
+      'dist/patchbay.js',
       'test/**/*test.js'
     ],
 
@@ -23,7 +23,7 @@ module.exports = function(config) {
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['progress', 'coverage'],
 
-    preprocessors: { 'dist/struck.js': ['coverage'] },
+    preprocessors: { 'dist/patchbay.js': ['coverage'] },
 
     coverageReporter: {
       type: 'lcov',

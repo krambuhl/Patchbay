@@ -9,6 +9,7 @@ var rename = require('gulp-rename');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
+var sequence = require('run-sequence');
 
 // docs & tests
 var docco = require('gulp-docco');
@@ -66,12 +67,15 @@ gulp.task('test', ['build'], function () {
 
 // __watch__ task:
 gulp.task('watch', function () {
-  gulp.watch(path.join(dir.source, '**/*.js'), ['compile']);
+  gulp.watch(path.join(dir.source, '**/*.js'), ['master']);
   gulp.watch(path.join(dir.test, '**/*'), ['test']);
 });
 
+gulp.task('master', function(done) {
+  sequence('compile', 'test', done);
+});
 
 gulp.task('compile', ['build', 'docs']);
-gulp.task('develop', ['compile', 'test', 'watch']);
+gulp.task('develop', ['master', 'watch']);
 
 gulp.task('default', ['develop']);
