@@ -2,6 +2,7 @@
   "name": "patchbay",
   "version": "0.1.0",
   "author": "Evan Krambuhl <thekrambuhl@gmail.com>",
+  "description": "Web components built on top of Struck",
   "keywords": [
     "View",
     "Model",
@@ -40,6 +41,6 @@
   "dependencies": {
     "jquery": "~2",
     "lodash": "~2",
-    "struck": "^0.5.1"
+    "struck": "~0.5"
   }
 }

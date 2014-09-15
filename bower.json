@@ -1,0 +1,28 @@
+{
+  "name": "patchbay",
+  "version": "0.1.0",
+  "description": "Web components built on top of Struck",
+  "homepage": "https://github.com/krambuhl/Patchbay",
+  "authors": [
+    "Evan Krambuhl <thekrambuhl@gmail.com>"
+  ],
+  "main": "dist/patchbay.js",
+  "keywords": [
+    "View",
+    "Model",
+    "Collection",
+    "Router"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ],
+  "dependencies": {
+    "jquery": "~2",
+    "lodash": "~2",
+    "struck": "~0.5"
+  }
+}
