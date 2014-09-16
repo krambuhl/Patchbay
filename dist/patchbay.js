@@ -82,7 +82,7 @@ Patchbay.View = (function() {
 
     _.defer(function() {
       // cache jquery elements
-      self.setUI(self, result(self.ui));
+      self.setUI(result(self.ui));
 
       // run setup function
       self.setup(self.options);
@@ -115,6 +115,8 @@ Patchbay.View = (function() {
       this.$ = function(el) {
         return self.$el.find(el);
       };
+    } else {
+      this.setElement(document.createElement('div'));
     }
   };
 
@@ -129,7 +131,7 @@ Patchbay.View = (function() {
   // `render` function that runs
   // template function with model data
   View.prototype.render = Struck.hook('render', function(template, model) {
-    if(_.isUndefined(template)) { 
+    if(_.isUndefined(firstDef(this.el, template))) { 
       return; 
     }
 

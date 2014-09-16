@@ -287,7 +287,7 @@ rendering, dom caching, and event listening.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      self.setUI(self, result(self.ui));</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      self.setUI(result(self.ui));</pre></div></div>
             
         </li>
         
@@ -344,6 +344,8 @@ rendering, dom caching, and event listening.</p>
       <span class="hljs-keyword">this</span>.$ = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(el)</span> </span>{
         <span class="hljs-keyword">return</span> self.$el.find(el);
       };
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">this</span>.setElement(<span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>));
     }
   };
 
@@ -383,7 +385,7 @@ template function with model data</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  View.prototype.render = Struck.hook(<span class="hljs-string">'render'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(template, model)</span> </span>{
-    <span class="hljs-keyword">if</span>(_.isUndefined(template)) { 
+    <span class="hljs-keyword">if</span>(_.isUndefined(firstDef(<span class="hljs-keyword">this</span>.el, template))) { 
       <span class="hljs-keyword">return</span>; 
     }
 
