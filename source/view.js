@@ -9,10 +9,10 @@ Patchbay.View = (function() {
   // rendering, dom caching, and event listening.
   var View = Struck.EventObject.extend();
 
-  View.prototype.coreConstructor = function() {
+  View.prototype.baseConstructor = function() {
     var self = this;
     
-    Struck.EventObject.prototype.coreConstructor.apply(this, arguments);
+    Struck.EventObject.prototype.baseConstructor.apply(this, arguments);
 
     // extend selected instance opitions to object
     _.extend(this, _.pick(this.options, viewOptions));
@@ -37,7 +37,7 @@ Patchbay.View = (function() {
 
   View.prototype.setModel = function(model, data) {
     data = firstDef(data, {});
-    
+
     if (model) {
       if (model instanceof Patchbay.Model) {
         this.model = model;
@@ -89,7 +89,7 @@ Patchbay.View = (function() {
   // called when View is initialized
   View.prototype.setup = _.noop;
 
-  // overwritable `destroy` function
+  // overwritable `destroys` function
   // that should be called when removing
   // a view to remove event listeners
   // or any possible memory leaks
@@ -99,8 +99,6 @@ Patchbay.View = (function() {
     // destroy model from view
     this.model.destroy();
   };
-
-  // ###Private Functions
 
   return View;
 });
