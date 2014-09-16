@@ -108,11 +108,12 @@ Patchbay.View = (function() {
 
   // caches the dom object and creates scoped find function
   View.prototype.setElement = function(el) {
+    var self = this;
     if (el) {
       this.$el = $(el).eq(0);
       this.el = this.$el[0];
       this.$ = function(el) {
-        return this.$el.find(el);
+        return self.$el.find(el);
       };
     }
   };
