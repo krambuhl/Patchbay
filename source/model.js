@@ -11,4 +11,4 @@ Patchbay.Model = (function() {
   };
 
 	return Model;
-});
+})();

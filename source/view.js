@@ -101,4 +101,4 @@ Patchbay.View = (function() {
   };
 
   return View;
-});
+})();

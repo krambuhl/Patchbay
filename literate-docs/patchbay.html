@@ -32,16 +32,16 @@
             
             <div class="content"><div class='highlight'><pre>(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(root, factory)</span> </span>{
   <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> define === <span class="hljs-string">'function'</span> &amp;&amp; define.amd) {
-    define([<span class="hljs-string">'lodash'</span>, <span class="hljs-string">'jquery'</span>, <span class="hljs-string">'exports'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_, $, exports)</span> </span>{
-      root.Patchbay = factory(root, exports, _, $);
+    define([<span class="hljs-string">'lodash'</span>, <span class="hljs-string">'jquery'</span>, <span class="hljs-string">'struck'</span>, <span class="hljs-string">'exports'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_, $, Struck, exports)</span> </span>{
+      root.Patchbay = factory(root, exports, _, $, Struck);
     });
   } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> exports !== <span class="hljs-string">'undefined'</span>) {
-    <span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>), $ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'jquery'</span>);
-    exports = factory(root, exports, _, $);
+    <span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>), $ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'jquery'</span>), Struck = <span class="hljs-built_in">require</span>(<span class="hljs-string">'struck'</span>);
+    exports = factory(root, exports, _, $, Struck);
   } <span class="hljs-keyword">else</span> {
-    root.Patchbay = factory(root, {}, root._, root.jQuery);
+    root.Patchbay = factory(root, {}, root._, root.jQuery, root.Struck);
   }
-}(<span class="hljs-keyword">this</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(root, Patchbay, _, $)</span> </span>{</pre></div></div>
+}(<span class="hljs-keyword">this</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(root, Patchbay, _, $, Struck)</span> </span>{</pre></div></div>
             
         </li>
         
@@ -133,16 +133,319 @@ always returns an array</p>
   });
 }
 Patchbay.Model = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
-	<span class="hljs-keyword">var</span> Model = Struck.EventObject.extend();
+	<span class="hljs-keyword">var</span> Model = Struck.EventObject.extend();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h3 id="create">create</h3>
+<p>prefered method of creating new objects
+over using the <code>new</code> style</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Model.create = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data, props, opts)</span> </span>{
+    _.extend(props, { data: data });
+    <span class="hljs-keyword">var</span> Creator = <span class="hljs-keyword">this</span>.extend(props);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Creator(_.extend({}, props, opts));
+  };
 
 	<span class="hljs-keyword">return</span> Model;
-});
-Patchbay.View = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
-	<span class="hljs-keyword">var</span> View = Struck.EventObject.extend();
+})();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h2 id="view">View</h2>
 
-	<span class="hljs-keyword">return</span> View;
-});
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Patchbay.View = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>array of options that will be extended
+to the view when initialized</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> viewOptions = [<span class="hljs-string">'el'</span>, <span class="hljs-string">'ui'</span>, <span class="hljs-string">'template'</span>, <span class="hljs-string">'model'</span>, <span class="hljs-string">'data'</span>];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p><code>View</code> constructor returns a View object
+that contains methods for template/model
+rendering, dom caching, and event listening.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> View = Struck.EventObject.extend();
+
+  View.prototype.baseConstructor = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+    
+    Struck.EventObject.prototype.baseConstructor.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>extend selected instance opitions to object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _.extend(<span class="hljs-keyword">this</span>, _.pick(<span class="hljs-keyword">this</span>.options, viewOptions));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>gets model</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.setModel(<span class="hljs-keyword">this</span>.model, <span class="hljs-keyword">this</span>.data);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>setup view elements</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.setElement(result(<span class="hljs-keyword">this</span>.el));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>render template with model if defined</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.render(<span class="hljs-keyword">this</span>.model);
+
+    _.defer(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>cache jquery elements</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      self.setUI(self, result(self.ui));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>run setup function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      self.setup(self.options);
+    });
+  };
+
+  View.prototype.setModel = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model, data)</span> </span>{
+    data = firstDef(data, {});
+
+    <span class="hljs-keyword">if</span> (model) {
+      <span class="hljs-keyword">if</span> (model <span class="hljs-keyword">instanceof</span> Patchbay.Model) {
+        <span class="hljs-keyword">this</span>.model = model;
+        <span class="hljs-keyword">this</span>.model.set(data);
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> model === <span class="hljs-string">'function'</span> &amp;&amp; !!model.create) {
+        <span class="hljs-keyword">this</span>.model = model.create(data);
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> model === <span class="hljs-string">'object'</span>) {
+        <span class="hljs-keyword">this</span>.model = Patchbay.Model.create(model);
+      }
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">this</span>.model = Patchbay.Model.create(data);
+    }
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>caches the dom object and creates scoped find function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  View.prototype.setElement = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(el)</span> </span>{
+    <span class="hljs-keyword">if</span> (el) {
+      <span class="hljs-keyword">this</span>.$el = $(el).eq(<span class="hljs-number">0</span>);
+      <span class="hljs-keyword">this</span>.el = <span class="hljs-keyword">this</span>.$el[<span class="hljs-number">0</span>];
+      <span class="hljs-keyword">this</span>.$ = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(el)</span> </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.$el.find(el);
+      };
+    }
+  };
+
+  View.prototype.setUI = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(ui)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>cache dom objects from UI object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.ui = _.reduce(ui, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(result, selector, name)</span> </span>{
+      result[name] = <span class="hljs-keyword">this</span>.$(selector);
+      <span class="hljs-keyword">return</span> result;
+    }, {}, <span class="hljs-keyword">this</span>);
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p><code>render</code> function that runs
+template function with model data</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  View.prototype.render = Struck.hook(<span class="hljs-string">'render'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(template, model)</span> </span>{
+    <span class="hljs-keyword">if</span>(_.isUndefined(template)) { 
+      <span class="hljs-keyword">return</span>; 
+    }
+
+    <span class="hljs-keyword">if</span> (_.isFunction(template)) {
+      <span class="hljs-keyword">this</span>.setElement(template(firstDef(model.data, {})));
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (_.isString(template)) {
+      <span class="hljs-keyword">this</span>.setElement(_.template(template, firstDef(model.data, {})));
+    }
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>overwritable <code>setup</code> function
+called when View is initialized</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  View.prototype.setup = _.noop;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>overwritable <code>destroys</code> function
+that should be called when removing
+a view to remove event listeners
+or any possible memory leaks</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  View.prototype.destroy = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    Struck.EventObject.prototype.destroy.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>destroy model from view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.model.destroy();
+  };
+
+  <span class="hljs-keyword">return</span> View;
+})();
   <span class="hljs-keyword">return</span> Patchbay;
 }));</pre></div></div>
             
