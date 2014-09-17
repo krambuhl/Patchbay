@@ -298,11 +298,16 @@ rendering, dom caching, and event listening.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>run setup function</p>
+              <p>run setup function
+calling hooks inline so overwriting
+setup function still gets hooked (feels iffy)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      self.setup(self.options);
+            <div class="content"><div class='highlight'><pre>      self.hook(<span class="hljs-string">'setup'</span>, <span class="hljs-string">'before'</span>);
+      self.setup(self.options);
+      self.hook(<span class="hljs-string">'setup'</span>);
+      self.hook(<span class="hljs-string">'setup'</span>, <span class="hljs-string">'after'</span>);
     });
   };
 
@@ -394,7 +399,19 @@ template function with model data</p>
     } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (_.isString(template)) {
       <span class="hljs-keyword">this</span>.setElement(_.template(template, firstDef(model.data, {})));
     }
-  });</pre></div></div>
+  });
+
+  View.prototype.state = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(prop, active)</span> </span>{
+    <span class="hljs-keyword">if</span> (_.isUndefined(active)) {
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.$el.hasClass(<span class="hljs-string">"is-"</span> + prop);
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">if</span> (active) {
+        <span class="hljs-keyword">this</span>.$el.addClass(<span class="hljs-string">"is-"</span> + prop);
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">this</span>.$el.removeClass(<span class="hljs-string">"is-"</span> + prop);
+      }
+    }
+  };</pre></div></div>
             
         </li>
         

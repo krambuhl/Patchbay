@@ -85,7 +85,12 @@ Patchbay.View = (function() {
       self.setUI(result(self.ui));
 
       // run setup function
+      // calling hooks inline so overwriting
+      // setup function still gets hooked (feels iffy)
+      self.hook('setup', 'before');
       self.setup(self.options);
+      self.hook('setup');
+      self.hook('setup', 'after');
     });
   };
 
@@ -141,6 +146,18 @@ Patchbay.View = (function() {
       this.setElement(_.template(template, firstDef(model.data, {})));
     }
   });
+
+  View.prototype.state = function(prop, active) {
+    if (_.isUndefined(active)) {
+      return this.$el.hasClass("is-" + prop);
+    } else {
+      if (active) {
+        this.$el.addClass("is-" + prop);
+      } else {
+        this.$el.removeClass("is-" + prop);
+      }
+    }
+  };
 
   // overwritable `setup` function
   // called when View is initialized

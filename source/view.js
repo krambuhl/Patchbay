@@ -93,15 +93,15 @@ Patchbay.View = (function() {
     }
   });
 
-  View.prototype.state = function(names, active) {
-    if (!_.isUndefined(active)) {
+  View.prototype.state = function(prop, active) {
+    if (_.isUndefined(active)) {
+      return this.$el.hasClass("is-" + prop);
+    } else {
       if (active) {
         this.$el.addClass("is-" + prop);
       } else {
         this.$el.removeClass("is-" + prop);
       }
-    } else {
-      return this.$el.hasClass("is-" + prop);
     }
   };
 
