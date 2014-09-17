@@ -31,12 +31,7 @@ Patchbay.View = (function() {
       self.setUI(result(self.ui));
 
       // run setup function
-      // calling hooks inline so overwriting
-      // setup function still gets hooked (feels iffy)
-      self.hook('setup', 'before');
-      self.setup(self.options);
-      self.hook('setup');
-      self.hook('setup', 'after');
+      forceHook(self, 'setup', self.options);
     });
   };
 
@@ -109,6 +104,8 @@ Patchbay.View = (function() {
   // called when View is initialized
   View.prototype.setup = _.noop;
 
+  View.prototype.cleanup = _.noop;
+
   // overwritable `destroys` function
   // that should be called when removing
   // a view to remove event listeners
@@ -118,7 +115,17 @@ Patchbay.View = (function() {
     
     // destroy model from view
     this.model.destroy();
+    
+    // run view cleanup
+    forceHook(this, 'cleanup');
   };
+
+  function forceHook(self, name) {
+    self.hook(name, 'before');
+    self[name].apply(self, _.rest(arguments, 2));
+    self.hook(name);
+    self.hook(name, 'after');
+  }
 
   return View;
 })();

@@ -298,16 +298,11 @@ rendering, dom caching, and event listening.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>run setup function
-calling hooks inline so overwriting
-setup function still gets hooked (feels iffy)</p>
+              <p>run setup function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      self.hook(<span class="hljs-string">'setup'</span>, <span class="hljs-string">'before'</span>);
-      self.setup(self.options);
-      self.hook(<span class="hljs-string">'setup'</span>);
-      self.hook(<span class="hljs-string">'setup'</span>, <span class="hljs-string">'after'</span>);
+            <div class="content"><div class='highlight'><pre>      forceHook(self, <span class="hljs-string">'setup'</span>, self.options);
     });
   };
 
@@ -427,7 +422,9 @@ called when View is initialized</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  View.prototype.setup = _.noop;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  View.prototype.setup = _.noop;
+
+  View.prototype.cleanup = _.noop;</pre></div></div>
             
         </li>
         
@@ -461,8 +458,30 @@ or any possible memory leaks</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.model.destroy();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.model.destroy();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>run view cleanup</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    forceHook(<span class="hljs-keyword">this</span>, <span class="hljs-string">'cleanup'</span>);
   };
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">forceHook</span><span class="hljs-params">(self, name)</span> </span>{
+    self.hook(name, <span class="hljs-string">'before'</span>);
+    self[name].apply(self, _.rest(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">2</span>));
+    self.hook(name);
+    self.hook(name, <span class="hljs-string">'after'</span>);
+  }
 
   <span class="hljs-keyword">return</span> View;
 })();
