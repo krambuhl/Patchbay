@@ -207,10 +207,10 @@ rendering, dom caching, and event listening.</p>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> View = Struck.EventObject.extend();
 
-  View.prototype.baseConstructor = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  View.prototype.initializeObject = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
     <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
     
-    Struck.EventObject.prototype.baseConstructor.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);</pre></div></div>
+    Struck.EventObject.prototype.initializeObject.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);</pre></div></div>
             
         </li>
         

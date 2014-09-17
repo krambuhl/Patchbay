@@ -63,10 +63,10 @@ Patchbay.View = (function() {
   // rendering, dom caching, and event listening.
   var View = Struck.EventObject.extend();
 
-  View.prototype.baseConstructor = function() {
+  View.prototype.initializeObject = function() {
     var self = this;
     
-    Struck.EventObject.prototype.baseConstructor.apply(this, arguments);
+    Struck.EventObject.prototype.initializeObject.apply(this, arguments);
 
     // extend selected instance opitions to object
     _.extend(this, _.pick(this.options, viewOptions));
