@@ -56,7 +56,7 @@ Patchbay.Model = (function() {
 Patchbay.View = (function() {
   // array of options that will be extended
   // to the view when initialized
-  var viewOptions = ['el', 'ui', 'template', 'model', 'data'];
+  var viewOptions = ['el', 'ui', 'template', 'model', 'data', 'parent'];
 
   // `View` constructor returns a View object
   // that contains methods for template/model
@@ -79,6 +79,9 @@ Patchbay.View = (function() {
 
     // render template with model if defined
     this.render(this.model);
+
+    // setup children
+    this.children = [];
 
     _.defer(function() {
       // cache jquery elements
@@ -152,6 +155,28 @@ Patchbay.View = (function() {
         this.$el.removeClass("is-" + prop);
       }
     }
+  };
+
+  View.prototype.addChild = function(el, obj) {
+    var self = this;
+
+    if (_.isUndefined(el)) { 
+      obj = el; 
+      el = this.$el;
+    }
+
+    if (_.isUndefined(obj)) { obj = Patchbay.View; }
+
+    if (el.length > 1) {
+      return el.map(function() {
+        return self.addChild(this, obj);
+      });
+    }
+      
+    var child = obj instanceof Struck.EventObject ? obj : obj.create({ el: el });
+
+    this.children.push(child);
+    return child;
   };
 
   // overwritable `setup` function

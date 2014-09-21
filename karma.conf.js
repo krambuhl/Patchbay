@@ -15,7 +15,7 @@ module.exports = function(config) {
     files: [
       'test/vendor/*.js',
       'dist/patchbay.js',
-      'test/**/*test.js'
+      // 'test/**/*test.js'
     ],
 
     // test results reporter to use

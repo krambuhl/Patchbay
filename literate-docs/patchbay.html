@@ -188,7 +188,7 @@ to the view when initialized</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> viewOptions = [<span class="hljs-string">'el'</span>, <span class="hljs-string">'ui'</span>, <span class="hljs-string">'template'</span>, <span class="hljs-string">'model'</span>, <span class="hljs-string">'data'</span>];</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> viewOptions = [<span class="hljs-string">'el'</span>, <span class="hljs-string">'ui'</span>, <span class="hljs-string">'template'</span>, <span class="hljs-string">'model'</span>, <span class="hljs-string">'data'</span>, <span class="hljs-string">'parent'</span>];</pre></div></div>
             
         </li>
         
@@ -270,9 +270,7 @@ rendering, dom caching, and event listening.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.render(<span class="hljs-keyword">this</span>.model);
-
-    _.defer(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.render(<span class="hljs-keyword">this</span>.model);</pre></div></div>
             
         </li>
         
@@ -283,11 +281,13 @@ rendering, dom caching, and event listening.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>cache jquery elements</p>
+              <p>setup children</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      self.setUI(result(self.ui));</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.children = [];
+
+    _.defer(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{</pre></div></div>
             
         </li>
         
@@ -297,6 +297,21 @@ rendering, dom caching, and event listening.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>cache jquery elements</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      self.setUI(result(self.ui));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>run setup function</p>
 
@@ -326,11 +341,11 @@ rendering, dom caching, and event listening.</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>caches the dom object and creates scoped find function</p>
 
@@ -354,11 +369,11 @@ rendering, dom caching, and event listening.</p>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>cache dom objects from UI object</p>
 
@@ -373,11 +388,11 @@ rendering, dom caching, and event listening.</p>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p><code>render</code> function that runs
 template function with model data</p>
@@ -406,16 +421,38 @@ template function with model data</p>
         <span class="hljs-keyword">this</span>.$el.removeClass(<span class="hljs-string">"is-"</span> + prop);
       }
     }
+  };
+
+  View.prototype.addChild = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(el, obj)</span> </span>{
+    <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+
+    <span class="hljs-keyword">if</span> (_.isUndefined(el)) { 
+      obj = el; 
+      el = <span class="hljs-keyword">this</span>.$el;
+    }
+
+    <span class="hljs-keyword">if</span> (_.isUndefined(obj)) { obj = Patchbay.View; }
+
+    <span class="hljs-keyword">if</span> (el.length &gt; <span class="hljs-number">1</span>) {
+      <span class="hljs-keyword">return</span> el.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">return</span> self.addChild(<span class="hljs-keyword">this</span>, obj);
+      });
+    }
+      
+    <span class="hljs-keyword">var</span> child = obj <span class="hljs-keyword">instanceof</span> Struck.EventObject ? obj : obj.create({ el: el });
+
+    <span class="hljs-keyword">this</span>.children.push(child);
+    <span class="hljs-keyword">return</span> child;
   };</pre></div></div>
             
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>overwritable <code>setup</code> function
 called when View is initialized</p>
@@ -429,11 +466,11 @@ called when View is initialized</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>overwritable <code>destroys</code> function
 that should be called when removing
@@ -448,11 +485,11 @@ or any possible memory leaks</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>destroy model from view</p>
 
@@ -463,11 +500,11 @@ or any possible memory leaks</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>run view cleanup</p>
 
